@@ -1,0 +1,192 @@
+[
+  [
+    {
+      "ruleVariableName": "UpdateQuantity",
+      "elapsedTime": 250,
+      "executionTime": "2025-08-04T12:30:00Z",
+      "actionVariableName": "UpdateFieldAction",
+      "inputs": ["BOM_ITEM_123", "10", "UPDATED"],
+      "changes": [
+        {
+          "identifier": "Field_Quantity",
+          "source": "BOMEditor",
+          "event": "ValueChanged",
+          "type": "NumberField",
+          "oldValue": "5",
+          "newValue": "10"
+        }
+      ]
+    }
+  ],
+  [
+    {
+      "ruleVariableName": "UpdatePartNumber",
+      "elapsedTime": 120,
+      "executionTime": "2025-08-04T12:31:00Z",
+      "actionVariableName": "UpdateFieldAction",
+      "inputs": ["BOM_ITEM_123", "ABC123", "UPDATED"],
+      "changes": [
+        {
+          "identifier": "Field_PartNumber",
+          "source": "BOMEditor",
+          "event": "ValueChanged",
+          "type": "TextField",
+          "oldValue": "XYZ789",
+          "newValue": "ABC123"
+        }
+      ]
+    }
+  ],
+  [
+    {
+      "ruleVariableName": "UpdateQuantity",
+      "elapsedTime": 180,
+      "executionTime": "2025-08-04T12:32:00Z",
+      "actionVariableName": "UpdateFieldAction",
+      "inputs": ["BOM_ITEM_456", "20", "UPDATED"],
+      "changes": [
+        {
+          "identifier": "Field_Quantity",
+          "source": "BOMEditor",
+          "event": "ValueChanged",
+          "type": "NumberField",
+          "oldValue": "15",
+          "newValue": "20"
+        }
+      ]
+    }
+  ],
+  [
+    {
+      "ruleVariableName": "UpdateDescription",
+      "elapsedTime": 90,
+      "executionTime": "2025-08-04T12:33:00Z",
+      "actionVariableName": "UpdateFieldAction",
+      "inputs": ["BOM_ITEM_123", "New Description", "UPDATED"],
+      "changes": [
+        {
+          "identifier": "Field_Description",
+          "source": "BOMEditor",
+          "event": "ValueChanged",
+          "type": "TextField",
+          "oldValue": "Old Description",
+          "newValue": "New Description"
+        }
+      ]
+    }
+  ],
+  [
+    {
+      "ruleVariableName": "ValidatePart",
+      "elapsedTime": 320,
+      "executionTime": "2025-08-04T12:34:00Z",
+      "actionVariableName": "ValidationAction",
+      "inputs": ["BOM_ITEM_123", "VALIDATE"],
+      "changes": [
+        {
+          "identifier": "Field_ValidationStatus",
+          "source": "Validator",
+          "event": "StatusChanged",
+          "type": "StatusField",
+          "oldValue": "PENDING",
+          "newValue": "VALID"
+        }
+      ]
+    }
+  ],
+  [
+    {
+      "ruleVariableName": "CalculatePrice",
+      "elapsedTime": 150,
+      "executionTime": "2025-08-04T12:35:00Z",
+      "actionVariableName": "CalculateAction",
+      "inputs": ["BOM_ITEM_123", "CALCULATE"],
+      "changes": [
+        {
+          "identifier": "Field_Price",
+          "source": "PriceCalculator",
+          "event": "ValueChanged",
+          "type": "CurrencyField",
+          "oldValue": "99.99",
+          "newValue": "129.99"
+        }
+      ]
+    }
+  ],
+  [
+    {
+      "ruleVariableName": "UpdateQuantity",
+      "elapsedTime": 200,
+      "executionTime": "2025-08-04T12:36:00Z",
+      "actionVariableName": "UpdateFieldAction",
+      "inputs": ["BOM_ITEM_789", "5", "UPDATED"],
+      "changes": [
+        {
+          "identifier": "Field_Quantity",
+          "source": "BOMEditor",
+          "event": "ValueChanged",
+          "type": "NumberField",
+          "oldValue": "2",
+          "newValue": "5"
+        }
+      ]
+    }
+  ],
+  [
+    {
+      "ruleVariableName": "ValidatePart",
+      "elapsedTime": 280,
+      "executionTime": "2025-08-04T12:37:00Z",
+      "actionVariableName": "ValidationAction",
+      "inputs": ["BOM_ITEM_456", "VALIDATE"],
+      "changes": [
+        {
+          "identifier": "Field_ValidationStatus",
+          "source": "Validator",
+          "event": "StatusChanged",
+          "type": "StatusField",
+          "oldValue": "PENDING",
+          "newValue": "VALID"
+        }
+      ]
+    }
+  ],
+  [
+    {
+      "ruleVariableName": "CalculatePrice",
+      "elapsedTime": 170,
+      "executionTime": "2025-08-04T12:38:00Z",
+      "actionVariableName": "CalculateAction",
+      "inputs": ["BOM_ITEM_456", "CALCULATE"],
+      "changes": [
+        {
+          "identifier": "Field_Price",
+          "source": "PriceCalculator",
+          "event": "ValueChanged",
+          "type": "CurrencyField",
+          "oldValue": "49.99",
+          "newValue": "59.99"
+        }
+      ]
+    }
+  ],
+  [
+    {
+      "ruleVariableName": "UpdateStatus",
+      "elapsedTime": 110,
+      "executionTime": "2025-08-04T12:39:00Z",
+      "actionVariableName": "UpdateFieldAction",
+      "inputs": ["BOM_ITEM_123", "ACTIVE", "UPDATED"],
+      "changes": [
+        {
+          "identifier": "Field_Status",
+          "source": "BOMEditor",
+          "event": "StatusChanged",
+          "type": "StatusField",
+          "oldValue": "DRAFT",
+          "newValue": "ACTIVE"
+        }
+      ]
+    }
+  ]
+]

@@ -1,2 +1,109 @@
-<h1>Hello World</h1>
-<p>This is a test</p>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Flight Path Parser</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <header>
+        <h1>Flight Path Parser</h1>
+        <p>Parse and analyze flight path JSON data</p>
+    </header>
+
+    <main>
+        <section class="input-section">
+            <h2>Input</h2>
+            <div class="json-input">
+                <label for="json-data">Flight Path JSON:</label>
+                <textarea id="json-data" placeholder="Paste your JSON data here..."></textarea>
+            </div>
+
+            <div class="functionality-selection">
+                <h3>Select Functionality:</h3>
+                <div class="radio-group">
+                    <div class="radio-option">
+                        <input type="radio" id="elapsed-time" name="functionality" value="1" checked>
+                        <label for="elapsed-time">Elapsed Time Calculator</label>
+                    </div>
+                    <div class="radio-option">
+                        <input type="radio" id="field-tracker" name="functionality" value="2">
+                        <label for="field-tracker">Field Tracker</label>
+                    </div>
+                    <div class="radio-option">
+                        <input type="radio" id="bom-tracker" name="functionality" value="3">
+                        <label for="bom-tracker">BOM Item Tracker</label>
+                    </div>
+                </div>
+            </div>
+
+            <div id="field-input" class="conditional-input hidden">
+                <label for="field-name">Field Variable Name:</label>
+                <input type="text" id="field-name" placeholder="Enter Field Variable Name">
+            </div>
+
+            <div id="bom-input" class="conditional-input hidden">
+                <label for="bom-id">BOM Item ID:</label>
+                <input type="text" id="bom-id" placeholder="Enter BOM Item ID">
+            </div>
+
+            <button id="parse-button">Parse Data</button>
+        </section>
+
+        <section class="output-section">
+            <h2>Results</h2>
+            <div id="error-message" class="error hidden"></div>
+            
+            <!-- Elapsed Time Results -->
+            <div id="elapsed-time-results" class="results-container">
+                <h3>Top 10 Rules by Elapsed Time</h3>
+                <table id="elapsed-time-table" class="results-table">
+                    <thead>
+                        <tr>
+                            <th>Rule Variable Name</th>
+                            <th>Total Elapsed Time</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Results will be inserted here by JavaScript -->
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Field/BOM Tracker Results -->
+            <div id="tracker-results" class="results-container hidden">
+                <h3 id="tracker-title">Field/BOM Item Information</h3>
+                <table id="tracker-table" class="results-table">
+                    <thead>
+                        <tr>
+                            <th>Identifier</th>
+                            <th>Rule Name</th>
+                            <th>Execution Time</th>
+                            <th>Action Name</th>
+                            <th>Source</th>
+                            <th>Event</th>
+                            <th>Type</th>
+                            <th>Old Value</th>
+                            <th>New Value</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Results will be inserted here by JavaScript -->
+                    </tbody>
+                </table>
+                <div id="inputs-container" class="hidden">
+                    <h4>Inputs:</h4>
+                    <pre id="inputs-display"></pre>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2025 Flight Path Parser | <a href="https://github.com/droidzer0/droidzer0.github.io" target="_blank">GitHub</a></p>
+    </footer>
+
+    <script src="js/script.js"></script>
+</body>
+</html>
