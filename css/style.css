@@ -201,6 +201,31 @@ footer a:hover {
     text-decoration: underline;
 }
 
+/* Download button styles */
+.download-container {
+    margin-top: 15px;
+    display: flex;
+    justify-content: flex-end;
+}
+
+.download-csv-btn {
+    background-color: var(--success-color);
+    color: white;
+    padding: 8px 15px;
+    border-radius: 4px;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    font-weight: 500;
+    transition: background-color 0.2s;
+}
+
+.download-csv-btn:hover {
+    background-color: #219653;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
 @media (max-width: 768px) {
     .radio-group {
         flex-direction: column;
