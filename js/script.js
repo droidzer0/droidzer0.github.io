@@ -147,7 +147,7 @@ document.addEventListener('DOMContentLoaded', () => {
             
             // Create download button
             createDownloadButton(
-                elapsedTimeResults,
+                elapsedTimeResults.querySelector('.download-container'),
                 csvData,
                 ['Rule Variable Name', 'Total Elapsed Time'],
                 'elapsed_time_results.csv'
@@ -269,7 +269,7 @@ document.addEventListener('DOMContentLoaded', () => {
             ];
             
             createDownloadButton(
-                trackerResults,
+                trackerResults.querySelector('.download-container'),
                 csvData,
                 csvHeaders,
                 fileName
