@@ -21,6 +21,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const trackerTable = document.getElementById('tracker-table').querySelector('tbody');
     const inputsContainer = document.getElementById('inputs-container');
     const inputsDisplay = document.getElementById('inputs-display');
+    
+    // CSV Download Buttons (will be created dynamically)
 
     // Show/hide conditional inputs based on selected functionality
     functionalityOptions.forEach(option => {
@@ -124,14 +126,32 @@ document.addEventListener('DOMContentLoaded', () => {
                 return;
             }
             
+            // Format data for table display and CSV export
+            const csvData = [];
+            
             sortedRules.forEach(([rule, time]) => {
+                // Add to table
                 const row = document.createElement('tr');
                 row.innerHTML = `
                     <td>${rule}</td>
                     <td>${time}</td>
                 `;
                 elapsedTimeTable.appendChild(row);
+                
+                // Add to CSV data
+                csvData.push({
+                    'Rule Variable Name': rule,
+                    'Total Elapsed Time': time
+                });
             });
+            
+            // Create download button
+            createDownloadButton(
+                elapsedTimeResults,
+                csvData,
+                ['Rule Variable Name', 'Total Elapsed Time'],
+                'elapsed_time_results.csv'
+            );
         } catch (error) {
             showError(`Error processing data: ${error.message}`);
         }
@@ -202,6 +222,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 return;
             }
             
+            // Format data for CSV export
+            const csvData = [];
+            
             fieldRuleList.forEach(item => {
                 const row = document.createElement('tr');
                 row.innerHTML = `
@@ -221,7 +244,37 @@ document.addEventListener('DOMContentLoaded', () => {
                     inputsDisplay.textContent = JSON.stringify(item.inputList, null, 2);
                 });
                 trackerTable.appendChild(row);
+                
+                // Add to CSV data - format the inputs list as a string
+                const csvItem = {
+                    'Identifier': item.identifier || '',
+                    'Rule Name': item.ruleName || '',
+                    'Execution Time': item.executionTime || '',
+                    'Action Name': item.actionName || '',
+                    'Source': item.source || '',
+                    'Event': item.event || '',
+                    'Type': item.type || '',
+                    'Old Value': JSON.stringify(item.oldValue) || '',
+                    'New Value': JSON.stringify(item.newValue) || '',
+                    'Inputs': JSON.stringify(item.inputList) || ''
+                };
+                csvData.push(csvItem);
             });
+            
+            // Create download button
+            const fileName = trackerType === 'Field' ? 'field_tracker_results.csv' : 'bom_item_results.csv';
+            const csvHeaders = [
+                'Identifier', 'Rule Name', 'Execution Time', 'Action Name',
+                'Source', 'Event', 'Type', 'Old Value', 'New Value', 'Inputs'
+            ];
+            
+            createDownloadButton(
+                trackerResults,
+                csvData,
+                csvHeaders,
+                fileName
+            );
+            
         } catch (error) {
             showError(`Error processing data: ${error.message}`);
         }
@@ -246,6 +299,70 @@ document.addEventListener('DOMContentLoaded', () => {
         inputsDisplay.textContent = '';
         inputsContainer.classList.add('hidden');
         hideError();
+        
+        // Remove any existing download buttons
+        const existingDownloadButtons = document.querySelectorAll('.download-csv-btn');
+        existingDownloadButtons.forEach(btn => btn.remove());
+    }
+    
+    // Function to convert results to CSV format
+    function convertToCSV(data, headers) {
+        if (!data || data.length === 0) return '';
+        
+        // Create header row
+        let csvContent = headers.join(',') + '\n';
+        
+        // Add data rows
+        data.forEach(row => {
+            const values = headers.map(header => {
+                // Get the value for this header
+                const value = row[header] !== undefined ? row[header] : '';
+                // Handle values that contain commas, quotes, or newlines
+                const escapedValue = typeof value === 'string' 
+                    ? '"' + value.replace(/"/g, '""') + '"' 
+                    : value;
+                return escapedValue;
+            });
+            csvContent += values.join(',') + '\n';
+        });
+        
+        return csvContent;
+    }
+    
+    // Function to download CSV file
+    function downloadCSV(csvContent, fileName) {
+        const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+        const url = URL.createObjectURL(blob);
+        
+        const link = document.createElement('a');
+        link.setAttribute('href', url);
+        link.setAttribute('download', fileName);
+        link.style.display = 'none';
+        
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+    }
+    
+    // Function to create download button
+    function createDownloadButton(container, data, headers, fileName) {
+        // Remove any existing button in this container first
+        const existingBtn = container.querySelector('.download-csv-btn');
+        if (existingBtn) {
+            existingBtn.remove();
+        }
+        
+        // Create button
+        const downloadBtn = document.createElement('button');
+        downloadBtn.textContent = 'Download as CSV';
+        downloadBtn.className = 'download-csv-btn';
+        downloadBtn.addEventListener('click', () => {
+            const csvContent = convertToCSV(data, headers);
+            downloadCSV(csvContent, fileName);
+        });
+        
+        // Add button to container
+        container.appendChild(downloadBtn);
     }
 
     // Initialize the page
