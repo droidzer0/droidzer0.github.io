@@ -3,20 +3,38 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Flight Path Parser</title>
+    <title>Flightpath Parser</title>
     <link rel="stylesheet" href="css/style.css">
+    <!-- CodeMirror (editor) -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/codemirror@5.65.16/lib/codemirror.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/codemirror@5.65.16/theme/material-darker.css">
 </head>
 <body>
     <header>
-        <h1>Flight Path Parser</h1>
-        <p>Parse and analyze flight path JSON data</p>
+        <h1>Flightpath Parser</h1>
+        <p>Parse and analyze flightpath JSON data</p>
+        <div class="header-actions">
+            <button id="theme-toggle" aria-label="Toggle dark mode">Toggle Dark Mode</button>
+            <a class="repo-link" href="https://github.com/droidzer0/droidzer0.github.io" target="_blank" rel="noopener">GitHub</a>
+        </div>
     </header>
 
     <main>
         <section class="input-section">
             <h2>Input</h2>
             <div class="json-input">
-                <label for="json-data">Flight Path JSON:</label>
+                <label for="json-data">Flightpath JSON:</label>
+                <div class="editor-toolbar">
+                    <div class="left-group">
+                        <input type="file" id="json-file" accept=".json,application/json" aria-label="Upload JSON file">
+                        <span id="file-meta" class="file-meta" aria-live="polite"></span>
+                    </div>
+                    <div class="right-group">
+                        <button id="format-json" type="button">Format</button>
+                        <button id="clear-json" type="button">Clear</button>
+                    </div>
+                </div>
+                <div id="drop-zone" class="drop-zone" aria-label="Drop JSON file here" tabindex="0">Drop JSON file here or use Upload</div>
                 <textarea id="json-data" placeholder="Paste your JSON data here..."></textarea>
             </div>
 
@@ -39,13 +57,35 @@
             </div>
 
             <div id="field-input" class="conditional-input hidden">
-                <label for="field-name">Field Variable Name:</label>
-                <input type="text" id="field-name" placeholder="Enter Field Variable Name">
+                <label for="field-name">Field Variable Name(s):</label>
+                <textarea id="field-name" placeholder="Enter one or more Field Variable Names (comma or newline separated)"></textarea>
+                <div class="search-options">
+                    <label><input type="checkbox" id="use-regex"> Use Regular Expression</label>
+                    <label><input type="checkbox" id="case-sensitive"> Case sensitive</label>
+                </div>
             </div>
 
             <div id="bom-input" class="conditional-input hidden">
-                <label for="bom-id">BOM Item ID:</label>
-                <input type="text" id="bom-id" placeholder="Enter BOM Item ID">
+                <label for="bom-id">BOM Item ID(s):</label>
+                <textarea id="bom-id" placeholder="Enter one or more BOM Item IDs (comma or newline separated)"></textarea>
+                <div class="search-options">
+                    <label><input type="checkbox" id="use-regex-bom"> Use Regular Expression</label>
+                    <label><input type="checkbox" id="case-sensitive-bom"> Case sensitive</label>
+                </div>
+            </div>
+
+            <div id="elapsed-controls" class="conditional-input">
+                <h4>Elapsed Time Options</h4>
+                <div class="controls-row">
+                    <label for="top-n">Top N:</label>
+                    <select id="top-n">
+                        <option value="5">5</option>
+                        <option value="10" selected>10</option>
+                        <option value="25">25</option>
+                    </select>
+                    <label for="min-threshold" class="threshold-label">Min elapsed time (ms):</label>
+                    <input type="number" id="min-threshold" min="0" step="1" placeholder="0">
+                </div>
             </div>
 
             <button id="parse-button">Parse Data</button>
@@ -58,11 +98,24 @@
             <!-- Elapsed Time Results -->
             <div id="elapsed-time-results" class="results-container">
                 <h3>Top 10 Rules by Elapsed Time</h3>
+                <div class="results-tools">
+                    <input type="text" id="elapsed-search" placeholder="Search results..." aria-label="Search elapsed time results">
+                </div>
+                <div id="elapsed-summary" class="summary" aria-live="polite"></div>
+                <div class="download-container">
+                    <!-- Download button will be inserted here by JavaScript -->
+                </div>
                 <table id="elapsed-time-table" class="results-table">
                     <thead>
                         <tr>
                             <th>Rule Variable Name</th>
                             <th>Total Elapsed Time</th>
+                            <th>Occurrences</th>
+                        </tr>
+                        <tr class="filters-row">
+                            <th><input type="text" placeholder="Filter rule" data-col="0"></th>
+                            <th><input type="text" placeholder="Filter time" data-col="1"></th>
+                            <th><input type="text" placeholder="Filter count" data-col="2"></th>
                         </tr>
                     </thead>
                     <tbody>
@@ -77,6 +130,12 @@
             <!-- Field/BOM Tracker Results -->
             <div id="tracker-results" class="results-container hidden">
                 <h3 id="tracker-title">Field/BOM Item Information</h3>
+                <div class="results-tools">
+                    <input type="text" id="tracker-search" placeholder="Search results..." aria-label="Search tracker results">
+                </div>
+                <div class="download-container">
+                    <!-- Download button will be inserted here by JavaScript -->
+                </div>
                 <table id="tracker-table" class="results-table">
                     <thead>
                         <tr>
@@ -90,14 +149,22 @@
                             <th>Old Value</th>
                             <th>New Value</th>
                         </tr>
+                        <tr class="filters-row">
+                            <th><input type="text" placeholder="Filter identifier" data-col="0"></th>
+                            <th><input type="text" placeholder="Filter rule" data-col="1"></th>
+                            <th><input type="text" placeholder="Filter time" data-col="2"></th>
+                            <th><input type="text" placeholder="Filter action" data-col="3"></th>
+                            <th><input type="text" placeholder="Filter source" data-col="4"></th>
+                            <th><input type="text" placeholder="Filter event" data-col="5"></th>
+                            <th><input type="text" placeholder="Filter type" data-col="6"></th>
+                            <th><input type="text" placeholder="Filter old" data-col="7"></th>
+                            <th><input type="text" placeholder="Filter new" data-col="8"></th>
+                        </tr>
                     </thead>
                     <tbody>
                         <!-- Results will be inserted here by JavaScript -->
                     </tbody>
                 </table>
-                <div class="download-container">
-                    <!-- Download button will be inserted here by JavaScript -->
-                </div>
                 <div id="inputs-container" class="hidden">
                     <h4>Inputs:</h4>
                     <pre id="inputs-display"></pre>
@@ -107,9 +174,22 @@
     </main>
 
     <footer>
-        <p>&copy; 2025 Flight Path Parser | <a href="https://github.com/droidzer0/droidzer0.github.io" target="_blank">GitHub</a></p>
+        <p>&copy; 2025 Flightpath Parser | <a href="https://github.com/droidzer0/droidzer0.github.io" target="_blank">GitHub</a></p>
+        <details class="help">
+            <summary>How to use</summary>
+            <ol>
+                <li>Paste or upload your JSON into the editor (you can also drag and drop a .json file).</li>
+                <li>Select the desired functionality. For Field/BOM, you can enter multiple values (comma or newline separated), or enable regex matching.</li>
+                <li>Click "Parse Data". Use search boxes and filters to refine results. Click column headers to sort; drag column edges to resize.</li>
+                <li>For Elapsed Time, adjust Top N and the minimum threshold. Use the Download button to export current view.</li>
+            </ol>
+            <p>See the <a href="README.md" target="_blank" rel="noopener">README</a> or report issues on <a href="https://github.com/droidzer0/droidzer0.github.io/issues" target="_blank" rel="noopener">GitHub Issues</a>.</p>
+        </details>
     </footer>
 
+    <!-- CodeMirror Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/codemirror@5.65.16/lib/codemirror.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/codemirror@5.65.16/mode/javascript/javascript.js"></script>
     <script src="js/script.js"></script>
 </body>
 </html>
