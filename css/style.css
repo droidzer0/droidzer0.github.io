@@ -1,4 +1,4 @@
-/* Flight Path Parser Styles */
+/* Flightpath Parser Styles */
 :root {
     --primary-color: #3498db;
     --primary-dark: #2980b9;
@@ -9,6 +9,8 @@
     --success-color: #27ae60;
     --warning-color: #f39c12;
     --error-color: #e74c3c;
+    --card-bg: #ffffff;
+    --muted-text: #666;
 }
 
 * {
@@ -23,6 +25,17 @@ body {
     color: var(--text-color);
     background-color: #f4f7f9;
     padding: 20px;
+}
+
+/* Apply theme background color to body */
+[data-theme="dark"] body {
+    background-color: #000000;
+}
+
+@media (prefers-color-scheme: dark) {
+    :root:not([data-theme]) body {
+        background-color: #000000;
+    }
 }
 
 header {
@@ -63,7 +76,7 @@ main {
 }
 
 .input-section, .output-section {
-    background-color: white;
+    background-color: var(--card-bg);
     padding: 20px;
     border-radius: 8px;
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
@@ -137,13 +150,20 @@ button:hover {
 
 .results-container {
     margin-top: 20px;
+    overflow: auto;
+    max-height: 500px; /* Control max height to enable scrolling */
+    position: relative;
+    /* Ensure position doesn't interfere with sticky positioning of children */
+    overflow-anchor: none;
+    /* Ensure container takes full width of parent */
+    width: 100%;
 }
 
 .results-table {
     width: 100%;
-    border-collapse: collapse;
+    border-collapse: separate;
+    border-spacing: 0;
     margin-top: 10px;
-    overflow-x: auto;
 }
 
 .results-table th, .results-table td {
@@ -153,7 +173,7 @@ button:hover {
 }
 
 .results-table th {
-    background-color: var(--light-bg);
+    background-color: var(--card-bg);
     font-weight: 600;
 }
 
@@ -189,7 +209,7 @@ footer {
     text-align: center;
     margin-top: 30px;
     padding: 10px;
-    color: #666;
+    color: var(--muted-text);
 }
 
 footer a {
@@ -234,5 +254,186 @@ footer a:hover {
     .results-table {
         display: block;
         overflow-x: auto;
+    }
+}
+
+/* Header actions */
+.header-actions {
+    margin-top: 8px;
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+}
+
+.repo-link {
+    color: #fff;
+    text-decoration: underline;
+}
+
+/* Editor toolbar and dropzone */
+.editor-toolbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 8px;
+}
+.editor-toolbar .left-group {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+.editor-toolbar .right-group {
+    display: flex;
+    gap: 8px;
+}
+.file-meta {
+    font-size: 0.9rem;
+    color: var(--muted-text);
+}
+.drop-zone {
+    border: 2px dashed var(--border-color);
+    background-color: var(--light-bg);
+    border-radius: 6px;
+    padding: 12px;
+    text-align: center;
+    color: var(--muted-text);
+    margin-bottom: 8px;
+}
+.drop-zone:focus {
+    outline: 2px solid var(--primary-color);
+    outline-offset: 2px;
+}
+.drop-zone.drag-over {
+    background-color: rgba(52, 152, 219, 0.08);
+    border-color: var(--primary-color);
+}
+
+/* CodeMirror editor sizing */
+.CodeMirror {
+    height: auto;
+    min-height: 200px;
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+}
+
+/* Filters and tools */
+.results-tools {
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 8px;
+}
+.results-tools input[type="text"] {
+    padding: 6px 8px;
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+}
+/* Removed conflicting selector */
+
+/* Ensure table headers have proper sticky behavior */
+.results-table thead {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+}
+
+.results-table thead tr:first-child th {
+    position: sticky;
+    top: 0;
+    z-index: 2;
+    background-color: var(--card-bg);
+}
+
+.results-table thead tr.filters-row th,
+.results-table thead tr:nth-child(2) th {
+    background-color: var(--card-bg);
+    position: sticky;
+    top: 42px; /* height of header row approx */
+    z-index: 1;
+}
+.filters-row input {
+    width: 100%;
+    padding: 6px 8px;
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+}
+.summary {
+    margin: 6px 0;
+    color: var(--muted-text);
+}
+
+/* Sortable headers */
+.results-table th.sortable {
+    cursor: pointer;
+}
+.results-table th.sortable::after {
+    content: '';
+    margin-left: 6px;
+    font-size: 0.8em;
+}
+.results-table th.sortable[data-sort="asc"]::after { content: '▲'; }
+.results-table th.sortable[data-sort="desc"]::after { content: '▼'; }
+
+/* Column resize handle */
+.col-resize-handle {
+    position: absolute;
+    right: 0;
+    top: 0;
+    width: 6px;
+    height: 100%;
+    cursor: col-resize;
+    user-select: none;
+}
+
+/* Search options */
+.search-options {
+    display: flex;
+    gap: 12px;
+    margin-top: 8px;
+}
+.controls-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+.threshold-label {
+    margin-left: 8px;
+}
+
+/* Dark mode (via data-theme="dark") */
+[data-theme="dark"] {
+    --primary-color: #4aa3ff;
+    --primary-dark: #1c6fbe;
+    --secondary-color: #ff6b6b;
+    --text-color: #e6e6e6;
+    --light-bg: #2b2f36;
+    --border-color: #3a3f47;
+    --card-bg: #1f2228;
+    --muted-text: #a8b0ba;
+    --error-color: #ff6b6b;
+    background-color: #000000;
+}
+
+[data-theme="dark"] header {
+    background-color: var(--primary-dark);
+}
+
+[data-theme="dark"] pre {
+    background-color: #23262b;
+}
+
+/* Respect system preference by default; JS toggle will override by setting data-theme */
+@media (prefers-color-scheme: dark) {
+    :root:not([data-theme]) {
+        --primary-color: #4aa3ff;
+        --primary-dark: #1c6fbe;
+        --secondary-color: #ff6b6b;
+        --text-color: #e6e6e6;
+        --light-bg: #2b2f36;
+        --border-color: #3a3f47;
+        --card-bg: #1f2228;
+        --muted-text: #a8b0ba;
+        --error-color: #ff6b6b;
+        background-color: #15181d;
     }
 }
