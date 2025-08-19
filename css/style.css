@@ -80,6 +80,8 @@ main {
     padding: 20px;
     border-radius: 8px;
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    /* Allow grid items to shrink and avoid causing page-wide horizontal overflow */
+    min-width: 0;
 }
 
 .json-input {
@@ -150,8 +152,10 @@ button:hover {
 
 .results-container {
     margin-top: 20px;
+    /* Confine scrolling to this container in both axes */
     overflow: auto;
-    max-height: 500px; /* Control max height to enable scrolling */
+    overflow-x: auto;
+    max-height: 1000px; /* Control max height to enable scrolling */
     position: relative;
     /* Ensure position doesn't interfere with sticky positioning of children */
     overflow-anchor: none;
@@ -164,12 +168,18 @@ button:hover {
     border-collapse: separate;
     border-spacing: 0;
     margin-top: 10px;
+    /* Prevent overly wide content from forcing table to expand beyond container */
+    table-layout: fixed;
 }
 
 .results-table th, .results-table td {
     padding: 10px;
     border: 1px solid var(--border-color);
     text-align: left;
+    /* Allow long tokens to wrap within the cell to avoid expanding the page */
+    white-space: normal;
+    word-break: break-word;
+    overflow-wrap: anywhere;
 }
 
 .results-table th {
