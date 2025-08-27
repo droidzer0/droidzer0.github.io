@@ -48,7 +48,13 @@ document.addEventListener('DOMContentLoaded', () => {
             tabSize: 2,
             indentUnit: 2,
             lineWrapping: true,
-            theme: getCurrentTheme() === 'dark' ? 'material-darker' : 'default'
+            theme: getCurrentTheme() === 'dark' ? 'material-darker' : 'default',
+            // Enable search with ctrl+f
+            extraKeys: {
+                "Ctrl-F": "findPersistent",
+                "Cmd-F": "findPersistent",
+                "Esc": "clearSearch"
+            }
         });
         cm.on('change', debounce(() => {
             liveValidate();
