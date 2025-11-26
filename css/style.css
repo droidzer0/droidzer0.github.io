@@ -280,6 +280,16 @@ footer a:hover {
     text-decoration: underline;
 }
 
+.visitor-badge {
+    margin-top: 10px;
+    text-align: center;
+}
+
+.visitor-badge img {
+    height: 18px;
+    width: auto;
+}
+
 /* Editor toolbar and dropzone */
 .editor-toolbar {
     display: flex;
