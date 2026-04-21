@@ -24,6 +24,13 @@ document.addEventListener('DOMContentLoaded', () => {
     const caseSensitiveBom = document.getElementById('case-sensitive-bom');
     const topNSelect = document.getElementById('top-n');
     const minThresholdInput = document.getElementById('min-threshold');
+
+    function getTopN(total) {
+        const raw = topNSelect?.value;
+        if (raw === 'all') return total;
+        const n = Number(raw);
+        return Number.isFinite(n) && n > 0 ? n : 10;
+    }
     const errorMessage = document.getElementById('error-message');
     const elapsedTimeResults = document.getElementById('elapsed-time-results');
     const trackerResults = document.getElementById('tracker-results');
@@ -216,7 +223,7 @@ document.addEventListener('DOMContentLoaded', () => {
             rows.sort((a, b) => b['Total Elapsed Time'] - a['Total Elapsed Time']);
 
             // Top N
-            const topN = Number(topNSelect?.value || 10) || 10;
+            const topN = getTopN(rows.length);
             const topRows = rows.slice(0, topN);
             
             // Display results in table
@@ -242,7 +249,10 @@ document.addEventListener('DOMContentLoaded', () => {
             // Update summary and heading
             updateElapsedSummary(rows);
             const h3 = elapsedTimeResults.querySelector('h3');
-            if (h3) h3.textContent = `Top ${topN} Rules by Elapsed Time`;
+            if (h3) {
+                const label = topNSelect?.value === 'all' ? 'All' : topN;
+                h3.textContent = `Top ${label} Rules by Elapsed Time`;
+            }
         } catch (error) {
             showError(`Error processing data: ${error.message}`);
         }
@@ -560,7 +570,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const filtered = filterAndSearch(state.elapsed.rows, state.elapsed.filters, state.elapsed.search, ['Rule Variable Name','Total Elapsed Time','Occurrences']);
         // Apply sort
         const sorted = sortRows(filtered, state.elapsed.sort, ['Rule Variable Name','Total Elapsed Time','Occurrences']);
-        const topN = Number(topNSelect?.value || 10) || 10;
+        const topN = getTopN(sorted.length);
         const limited = sorted.slice(0, topN);
         state.elapsed.view = limited;
         // Render
